@@ -1,6 +1,32 @@
-# Fable 5 → Opus 4.8 行为移植套件
+# make-opus-fable
 
-把 Fable 5 训练出来的**工作纪律**(不是能力)翻译成 Opus 4.8 可执行的显式指令。每条设计都有实证出处,见《调研报告-Fable行为移植Opus.md》。
+让 Opus 4.8 在**工作纪律和审计广度**上更像 Fable 5 —— 一套行为/编排 skill,把 Fable 训练出来的习惯翻译成 Opus 可执行的显式流程 + 结构。每条设计都有实证出处(八批评测,见 `evals/`)。
+
+## 一条命令安装
+
+```bash
+git clone https://github.com/LewenW/make-opus-fable.git
+cd make-opus-fable
+bash install.sh
+```
+
+装完**开一个新 Claude Code 会话**即生效。试试:`/deep-audit` 审仓库找 bug、`/verify-before-done` 交付前自检。
+
+- `bash install.sh --with-hooks` —— 额外装确定性触发 hook(让 deep-audit 更可靠地自动触发)
+- `bash install.sh --uninstall` —— 一键卸载(用清晰标记块管理 CLAUDE.md,绝不动你原有内容)
+- 装什么:4 个 skill → `~/.claude/skills/`、verifier subagent → `~/.claude/agents/`、行为纪律块追加进 `~/.claude/CLAUDE.md`(带 `make-opus-fable` 标记,可移除)。幂等,重装安全。
+
+## 它有用在哪(诚实版)
+
+- ✅ **行为纪律**(verify-before-done / 常驻核):盲测 15胜2负——诚实汇报、不瞎说、范围克制、不编造。
+- ✅ **审计广度**(deep-audit):`effort=xhigh` + 每文件扇出,缺陷召回从裸 Opus 5.5 提到 7/10(弥合约 43%),依从性 5/5 可自主触发。真实代码上一次挖出 10 个 bug。
+- ❌ **不注入能力**:感知(读图)、知识密度、微妙契约违反的召回——这些是训练进去的,skill 补不了。真实代码同协议头对头 Opus 7/9 vs Fable 9/9,拉近但不平。
+
+**一句话:skill 有用于"行为"与"结构"轴,无用于注入"能力"。** 全部证据(含被证伪的结论)在 `evals/HARDBENCH.md`。
+
+---
+
+## 原始说明
 
 ✅ **已盲测三轮 + Fable 迭代两版**(2026-07-04):终版战绩 **15胜2负0平**(17 个不同埋雷任务,双臂均为 Opus 4.8,盲评,全过程含败绩见 `evals/RESULTS.md`)。当前版本:verify-before-done **v3**、CLAUDE-core **v2**、其余 v1。
 ⚠️ 仍未验证的部分:全部测试为**短单轮任务**——长视野多步任务(套件的核心目标场景)需要多轮 harness,尚未测。两场遗留败仗(均为排雷满分后的窄幅 tiebreak)如实保留在战绩里。
