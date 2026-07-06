@@ -43,7 +43,7 @@ PY
 
 if [ "$MODE" = "uninstall" ]; then
   echo "Uninstalling make-opus-fable from $CLAUDE ..."
-  for s in verify-before-done long-horizon-protocol memory-discipline deep-audit judgment; do
+  for s in verify-before-done long-horizon-protocol memory-discipline deep-audit judgment quant-thesis; do
     rm -rf "$CLAUDE/skills/$s" && say "removed skill: $s" || true
   done
   rm -f "$CLAUDE/agents/verifier.md" && say "removed agent: verifier" || true
@@ -57,7 +57,7 @@ echo "Installing make-opus-fable into $CLAUDE ..."
 mkdir -p "$CLAUDE/skills" "$CLAUDE/agents"
 
 # 1) skills (additive; overwrites only our own skill dirs)
-for s in verify-before-done long-horizon-protocol memory-discipline deep-audit judgment; do
+for s in verify-before-done long-horizon-protocol memory-discipline deep-audit judgment quant-thesis; do
   mkdir -p "$CLAUDE/skills/$s"
   cp "$SRC/skills/$s/SKILL.md" "$CLAUDE/skills/$s/SKILL.md"
   say "skill installed: /$s"
@@ -106,7 +106,7 @@ fi
 cat <<EOF
 
 Done. Installed into $CLAUDE
-  skills:  verify-before-done, long-horizon-protocol, memory-discipline, deep-audit
+  skills:  verify-before-done, long-horizon-protocol, memory-discipline, deep-audit, judgment, quant-thesis
   agent:   verifier
   core:    behavior discipline block in CLAUDE.md
 $([ "$WITH_HOOKS" = "1" ] && echo "  hook:    deep-audit-trigger (UserPromptSubmit)" || echo "  hook:    (skipped; add with --with-hooks)")
@@ -114,5 +114,6 @@ $([ "$WITH_HOOKS" = "1" ] && echo "  hook:    deep-audit-trigger (UserPromptSubm
 Start a new Claude Code session to load them. Try it:
   /deep-audit   review a repo for bugs (fan-out + xhigh)
   /verify-before-done   before declaring work done
+  /quant-thesis   forecast a downstream figure from messy upstream signals
 Remove anytime:  bash install.sh --uninstall
 EOF
