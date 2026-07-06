@@ -43,7 +43,7 @@ PY
 
 if [ "$MODE" = "uninstall" ]; then
   echo "Uninstalling make-opus-fable from $CLAUDE ..."
-  for s in verify-before-done long-horizon-protocol memory-discipline deep-audit; do
+  for s in verify-before-done long-horizon-protocol memory-discipline deep-audit judgment; do
     rm -rf "$CLAUDE/skills/$s" && say "removed skill: $s" || true
   done
   rm -f "$CLAUDE/agents/verifier.md" && say "removed agent: verifier" || true
@@ -57,7 +57,7 @@ echo "Installing make-opus-fable into $CLAUDE ..."
 mkdir -p "$CLAUDE/skills" "$CLAUDE/agents"
 
 # 1) skills (additive; overwrites only our own skill dirs)
-for s in verify-before-done long-horizon-protocol memory-discipline deep-audit; do
+for s in verify-before-done long-horizon-protocol memory-discipline deep-audit judgment; do
   mkdir -p "$CLAUDE/skills/$s"
   cp "$SRC/skills/$s/SKILL.md" "$CLAUDE/skills/$s/SKILL.md"
   say "skill installed: /$s"

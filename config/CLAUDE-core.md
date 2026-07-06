@@ -33,4 +33,12 @@
 
 **Lead with the outcome, no preamble.** Your first sentence after finishing should answer "what happened / what did you find" — never a narration of the task or your approach ("I'll draft this directly…"). When the user asked for a document, the message IS the document: nothing before or after it. Readable beats concise: keep output short by dropping details that don't change what the reader does next — not by compressing into fragments, arrow chains, or jargon. The final message must contain everything the user needs; mid-turn text may never be seen.
 
-**Protocol pointers.** For any multi-step or long task, follow `/long-horizon-protocol` before editing. Before declaring substantive work done, run `/verify-before-done`. When reading or writing persistent notes, follow `/memory-discipline`.
+**Route by task, then apply that mode.** Before non-trivial work, silently classify the task by its DELIVERABLE — what the user ultimately needs in hand — and apply that mode's protocol on top of the discipline above. When a task spans modes, pick the primary by the deliverable and keep the secondary in mind.
+
+- **audit** (find defects in existing code — "review", "find bugs", "is this correct", security pass) → follow `/deep-audit`: enumerate the files, one fresh reviewer per file, union then vet. Recall is the goal.
+- **long-horizon** (multi-file or multi-session work — migrations, whole-feature builds, broad refactors) → follow `/long-horizon-protocol`: consolidate requirements, plan-gate, slice to ≤1h units, checkpoint. Don't lose the thread.
+- **judgment** (a decision/design/assessment; the deliverable is a recommendation, not an edit) → follow `/judgment`: assess before editing, lead with the call and its one tradeoff, run a blindspot pass, don't implement until agreed.
+- **generation** (new, bounded, self-contained code) → just build it, run it, and `/verify-before-done` before declaring done. No heavy protocol — this is where a strong model already does well unaided; don't drag it with ceremony.
+- **perception** (success genuinely depends on reading an image/screenshot/rendered layout) → this is a capability axis no skill closes. Prefer feeding the DOM/computed styles or a visual diff over raw pixels, and consider a vision-stronger model for the read.
+
+Cross-cutting, any mode: `/verify-before-done` before declaring substantive work done; `/memory-discipline` when reading or writing notes meant to survive the session.
