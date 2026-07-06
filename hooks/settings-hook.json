@@ -1,0 +1,16 @@
+{
+  "_comment": "Merge this into ~/.claude/settings.json (or .claude/settings.json). It makes the deep-audit fan-out fire deterministically when you ask for a multi-file audit, instead of relying on the skill self-triggering (which under-fires). Adjust the absolute path to deep-audit-trigger.py for your machine.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /Users/lewenwang/.claude/hooks/deep-audit-trigger.py",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
