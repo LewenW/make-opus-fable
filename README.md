@@ -35,7 +35,7 @@ cd make-opus-fable && bash install.sh
 | Command | What it does |
 | :-- | :-- |
 | `bash install.sh` | Installs 6 skills + the `verifier` subagent + the behavior discipline block |
-| `bash install.sh --with-hooks` | Also installs a deterministic trigger hook (makes `deep-audit` fire more reliably) |
+| `bash install.sh --with-hooks` | Also installs two deterministic hooks: the audit trigger (makes `deep-audit` fire more reliably) and `verify-after-edit` (runs your project's tests after every code edit) |
 | `bash install.sh --uninstall` | One-command removal (manages `CLAUDE.md` via a marked block, **never touches your existing content**) |
 
 > Idempotent, safe to re-run. Installs to the user-level `~/.claude/`; the behavior core is **appended** to `~/.claude/CLAUDE.md` inside a block marked `make-opus-fable`, and precisely removed on uninstall. Tested end to end: install → reinstall → uninstall leaves your original content untouched.
@@ -123,7 +123,9 @@ agents/verifier.md        fresh-context adversarial verification subagent (@veri
 config/
   CLAUDE-core.md          persistent behavior core + task router (install into ~/.claude/CLAUDE.md; 5 modes)
   settings-snippets.md    config levers: thinking / effort / hooks / API parameters
-hooks/                    deterministic backstop: multi-file audit intent always triggers fan-out (deep-audit-trigger.py)
+hooks/                    deterministic backstops (fire regardless of what the model remembers)
+  deep-audit-trigger.py   UserPromptSubmit: multi-file audit intent always triggers the fan-out
+  verify-after-edit.py    PostToolUse: runs the project's tests after every code edit (mechanizes verify-before-done)
 evals/
   HARDBENCH.md            13 batches of objective three-arm evals (core evidence; includes overturned conclusions)
   RESULTS.md              full blind-eval track record and iteration history (15-2-0; includes every loss, diagnosis, lesson)

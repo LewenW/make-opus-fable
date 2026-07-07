@@ -1,5 +1,5 @@
 {
-  "_comment": "Merge this into ~/.claude/settings.json (or .claude/settings.json). It makes the deep-audit fan-out fire deterministically when you ask for a multi-file audit, instead of relying on the skill self-triggering (which under-fires). Adjust the absolute path to deep-audit-trigger.py for your machine.",
+  "_comment": "Merge this into ~/.claude/settings.json (or .claude/settings.json). Two deterministic backstops: (1) UserPromptSubmit fires the deep-audit fan-out when you ask for a multi-file audit, instead of relying on the skill self-triggering (which under-fires); (2) PostToolUse runs your project's tests after every code edit, so verify-before-done is enforced mechanically, not left to memory. Adjust the absolute hook paths for your machine (install.sh --with-hooks writes them for you).",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -8,6 +8,18 @@
             "type": "command",
             "command": "python3 /Users/lewenwang/.claude/hooks/deep-audit-trigger.py",
             "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /Users/lewenwang/.claude/hooks/verify-after-edit.py",
+            "timeout": 120
           }
         ]
       }
