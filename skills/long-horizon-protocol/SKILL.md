@@ -37,6 +37,30 @@ OUT OF SCOPE: <adjacent things you noticed but will NOT touch>
 - **The surprise rule:** when reality contradicts the plan — a file isn't where expected, a test fails for an unrelated reason, an API behaves differently — stop. State what changed, update the plan, then continue. Do not improvise past a surprise; a surprised plan is an invalid plan.
 - When a subtask is independent of your current work, delegate it to a subagent and keep working; check its result before building on it.
 
+## 3.5 The evidence ledger and completion gate
+
+For multi-part work, "done" is not a feeling — it is a state where every load-bearing claim has been
+verified. Keep a running **ledger** (in your notes or progress file) with one row per step/story, each
+rated on the rung it has actually reached:
+
+```
+LEDGER
+  [VERIFIED] story A — auth refuses bad tokens   ← test_auth.py::test_reject passes (ran it)
+  [RUNS]     story B — /export endpoint returns   ← curl 200, output not yet checked against spec
+  [WRITTEN]  story C — retry on 429               ← code exists, never executed
+```
+
+The rung ladder — claim only the rung you actually reached:
+- **WRITTEN** — the code/change exists. This is the weakest claim; "I wrote it" is not "it works".
+- **RUNS** — it executed without error, but you haven't confirmed the output is correct.
+- **VERIFIED** — you ran the real check (a test, the actual command, the observed behavior) and saw the
+  correct result. Only VERIFIED counts as done.
+
+**The completion gate:** you may not report the whole task as done while any load-bearing story is below
+VERIFIED. A story stuck at WRITTEN or RUNS is either the next thing to finish or an explicit, named risk
+the user inherits — never silently folded into a "done" summary. This gate is what a completion-tracking
+script buys mechanically; here it is your discipline, backstopped by the `verify-after-edit` hook.
+
 ## 4. Context and state hygiene
 
 - Every ~10 steps, or before any risky operation, write a structured checkpoint into your working notes or a progress file: current goal / decisions made and why / errors hit and their fixes / open TODOs. This is what survives compaction and session boundaries; your raw transcript does not.

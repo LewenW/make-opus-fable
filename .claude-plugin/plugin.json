@@ -1,0 +1,9 @@
+{
+  "name": "make-opus-fable",
+  "description": "Make Opus 4.8 more Fable-like: discipline, audit breadth, and quant reflexes. Ships 7 skills + a verifier agent, backed by 13 batches of honest three-arm evals.",
+  "author": { "name": "Lewen Wang" },
+  "homepage": "https://github.com/LewenW/make-opus-fable",
+  "repository": "https://github.com/LewenW/make-opus-fable",
+  "license": "MIT",
+  "keywords": ["fable", "opus", "claude-code", "skills", "audit", "quant", "verification", "discipline"]
+}

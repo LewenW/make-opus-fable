@@ -8,7 +8,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![For Claude Code](https://img.shields.io/badge/for-Claude%20Code-8A2BE2.svg)](https://claude.com/claude-code)
 [![Model: Opus 4.8](https://img.shields.io/badge/model-Opus%204.8-1f6feb.svg)](#)
-[![Skills: 6](https://img.shields.io/badge/skills-6-informational.svg)](#-six-skills)
+[![Skills: 7](https://img.shields.io/badge/skills-7-informational.svg)](#-seven-skills)
 [![Evidence: 13 batches](https://img.shields.io/badge/evals-13%20batches-orange.svg)](evals/HARDBENCH.md)
 
 An **evidence-backed** suite of behavior / orchestration skills, built on the most exhaustive public Opus↔Fable eval sweep we're aware of — 13 batches of objective three-arm testing (bare Opus / Opus+suite / Fable) across nearly every axis that could conceivably separate them, **including conclusions our own held-out testing later overturned**. The result: near-total parity everywhere, and this suite closes most of what's left.
@@ -34,11 +34,20 @@ cd make-opus-fable && bash install.sh
 
 | Command | What it does |
 | :-- | :-- |
-| `bash install.sh` | Installs 6 skills + the `verifier` subagent + the behavior discipline block |
-| `bash install.sh --with-hooks` | Also installs two deterministic hooks: the audit trigger (makes `deep-audit` fire more reliably) and `verify-after-edit` (runs your project's tests after every code edit) |
+| `bash install.sh` | Installs 7 skills + the `verifier` subagent + the behavior discipline block |
+| `bash install.sh --with-hooks` | Also installs two deterministic hooks: `verify-after-edit` (runs your project's tests after every code edit) and `deep-audit-trigger` (makes the audit fan-out fire reliably) |
 | `bash install.sh --uninstall` | One-command removal (manages `CLAUDE.md` via a marked block, **never touches your existing content**) |
 
 > Idempotent, safe to re-run. Installs to the user-level `~/.claude/`; the behavior core is **appended** to `~/.claude/CLAUDE.md` inside a block marked `make-opus-fable`, and precisely removed on uninstall. Tested end to end: install → reinstall → uninstall leaves your original content untouched.
+
+### Or install as a Claude Code plugin
+
+```text
+/plugin marketplace add LewenW/make-opus-fable
+/plugin install make-opus-fable@make-opus-fable
+```
+
+The plugin path delivers the **7 skills + the `verifier` agent** (namespaced, e.g. `/make-opus-fable:deep-audit`) with zero cloning. Because plugins can't modify your `CLAUDE.md` or auto-load these hooks, the **always-on behavior core and the two deterministic hooks still come from `install.sh`** — run it if you want the full suite. Use whichever entry point fits; they don't conflict. (Marketplace manifest passes `claude plugin validate`.)
 
 ---
 
@@ -59,7 +68,7 @@ That's the whole picture: an exhaustive, evidence-first sweep, near-total parity
 
 ---
 
-## 🧩 Six skills
+## 🧩 Seven skills
 
 Once installed, each can be triggered manually with `/<name>`, or automatically based on its `description` (skills are known to under-trigger — **manual invocation is recommended for anything that matters**).
 
@@ -69,10 +78,11 @@ Once installed, each can be triggered manually with `/<name>`, or automatically 
 | 🗂 **deep-audit** | The goal is to find **every** defect: pre-merge multi-file audits, "review this module for bugs", regression / security passes | Enumerate files → one fresh `xhigh` reviewer per file, in parallel → union, then de-dupe and re-verify. Trades tokens and wall-clock for coverage |
 | 📈 **quant-thesis** | Forecasting a downstream number from upstream signals: "what does X imply for Y", "will revenue accelerate", "read-through" | Shows the decomposition arithmetic explicitly, sizes pass-through with coefficients, gives a numbered band, splits conviction into direction vs. magnitude, checks base effects / stock-vs-flow |
 | ⚖️ **judgment** | The deliverable is a **decision / design / assessment**, not an edit: "should we do X or Y", "is this design sound" | Assess before editing, lead with the call plus its one real tradeoff, run a blindspot pass, don't implement until agreed |
-| 🧭 **long-horizon-protocol** | Spans multiple files / steps / sessions: refactors, migrations, whole features, cross-module debugging, long research | Consolidate requirements → plan-gate → slice into ≤1h units → checkpoint state, don't lose the thread |
+| 🧭 **long-horizon-protocol** | Spans multiple files / steps / sessions: refactors, migrations, whole features, cross-module debugging, long research | Consolidate requirements → plan-gate → slice into ≤1h units → evidence ledger + completion gate → checkpoint state |
 | 🧠 **memory-discipline** | Reading or writing cross-session memory: `CLAUDE.md`, progress notes, lesson ledgers | What to write / how to write it / verify before recalling — never carry an assumption into a future session as if it were fact |
+| 🖼 **visual-grounding** | The deliverable is **visual**: rendered HTML/CSS, SVG, charts, UI, animations, any layout/styling change | Render it and look at the actual output (screenshot / DOM / computed styles) before claiming it works — a passing build verifies code, not pixels |
 
-> Plus `agents/verifier.md` — a fresh-context adversarial verification subagent. Invoke `@verifier` by name on high-stakes changes to guarantee the check actually runs (stronger than self-review).
+> Plus `agents/verifier.md` — a fresh-context adversarial verification subagent. Invoke `@verifier` by name on high-stakes changes to guarantee the check actually runs (stronger than self-review). And two deterministic **hooks** (`--with-hooks`): `verify-after-edit` runs your project's tests after every code edit (debounced, with a timeout and env-var kill switch), `deep-audit-trigger` guarantees the audit fan-out fires — a skill is a request, a hook is a guarantee.
 
 ---
 
@@ -98,6 +108,8 @@ Every conclusion (including the ones held-out testing overturned) lives in **[`e
 - **Four capability-axis follow-ups** (terminal agentic / instruction-following at 85 concurrent constraints / long-context multi-hop / knowledge density) → all four axes show **zero separation** across all three arms — every one at ceiling.
 - **Real-world validation** → a full fan-out audit of a production repo surfaced **1 critical + 8 high-severity bugs, all confirmed real** ([`evals/AUDIT-PARALLAX.md`](evals/AUDIT-PARALLAX.md)).
 
+**New here?** [`evals/SHOWCASE.md`](evals/SHOWCASE.md) is the 2-minute before/after version — three concrete flips (quant 6:27 → 15:18, defect recall 5.5 → near-Fable, behavior 15-2) without the full eval density.
+
 ---
 
 ## 🛠 Usage notes
@@ -117,16 +129,17 @@ skills/
   deep-audit/             fan-out audit: effort xhigh (frontmatter) + per-file reviewer + de-dupe re-verify
   quant-thesis/           quant reflexes: show decomposition arithmetic / sized pass-through / numbered bands / two-tier conviction
   judgment/               decisions/design: assess before editing, lead with the call + one tradeoff, blindspot pass
-  long-horizon-protocol/  long tasks: consolidate requirements → plan-gate → slice → checkpoint
+  long-horizon-protocol/  long tasks: consolidate → plan-gate → slice → evidence ledger + completion gate → checkpoint
   memory-discipline/      memory hygiene: what/how to write, verify before recalling
+  visual-grounding/       visual work: render and look at the actual output before claiming it works
 agents/verifier.md        fresh-context adversarial verification subagent (@verifier = guaranteed execution)
 config/
   CLAUDE-core.md          persistent behavior core + task router (install into ~/.claude/CLAUDE.md; 5 modes)
   settings-snippets.md    config levers: thinking / effort / hooks / API parameters
-hooks/                    deterministic backstops (fire regardless of what the model remembers)
-  deep-audit-trigger.py   UserPromptSubmit: multi-file audit intent always triggers the fan-out
-  verify-after-edit.py    PostToolUse: runs the project's tests after every code edit (mechanizes verify-before-done)
+hooks/                    two deterministic backstops: verify-after-edit (PostToolUse) + deep-audit-trigger (UserPromptSubmit)
+.claude-plugin/           plugin + marketplace manifests (install via /plugin marketplace add)
 evals/
+  SHOWCASE.md             2-minute before/after highlights (start here)
   HARDBENCH.md            13 batches of objective three-arm evals (core evidence; includes overturned conclusions)
   RESULTS.md              full blind-eval track record and iteration history (15-2-0; includes every loss, diagnosis, lesson)
   AUDIT-PARALLAX.md        full fan-out audit report on a production repo (1 critical + 8 high, all confirmed real)

@@ -43,12 +43,13 @@ PY
 
 if [ "$MODE" = "uninstall" ]; then
   echo "Uninstalling make-opus-fable from $CLAUDE ..."
-  for s in verify-before-done long-horizon-protocol memory-discipline deep-audit judgment quant-thesis; do
+  for s in verify-before-done long-horizon-protocol memory-discipline deep-audit judgment quant-thesis visual-grounding; do
     rm -rf "$CLAUDE/skills/$s" && say "removed skill: $s" || true
   done
   rm -f "$CLAUDE/agents/verifier.md" && say "removed agent: verifier" || true
+  rm -f "$CLAUDE/hooks/deep-audit-trigger.py" "$CLAUDE/hooks/verify-after-edit.py" && say "removed hook scripts" || true
   remove_block && say "removed CLAUDE.md behavior block" || true
-  say "note: hook entries in settings.json (if you added --with-hooks) are NOT auto-removed; edit settings.json to remove the deep-audit-trigger and verify-after-edit entries."
+  say "note: hook ENTRIES in settings.json (if you added --with-hooks) are NOT auto-removed; edit settings.json to drop the deep-audit-trigger and verify-after-edit commands."
   echo "Done."
   exit 0
 fi
@@ -57,7 +58,7 @@ echo "Installing make-opus-fable into $CLAUDE ..."
 mkdir -p "$CLAUDE/skills" "$CLAUDE/agents"
 
 # 1) skills (additive; overwrites only our own skill dirs)
-for s in verify-before-done long-horizon-protocol memory-discipline deep-audit judgment quant-thesis; do
+for s in verify-before-done long-horizon-protocol memory-discipline deep-audit judgment quant-thesis visual-grounding; do
   mkdir -p "$CLAUDE/skills/$s"
   cp "$SRC/skills/$s/SKILL.md" "$CLAUDE/skills/$s/SKILL.md"
   say "skill installed: /$s"
@@ -121,7 +122,7 @@ fi
 cat <<EOF
 
 Done. Installed into $CLAUDE
-  skills:  verify-before-done, long-horizon-protocol, memory-discipline, deep-audit, judgment, quant-thesis
+  skills:  verify-before-done, long-horizon-protocol, memory-discipline, deep-audit, judgment, quant-thesis, visual-grounding
   agent:   verifier
   core:    behavior discipline block in CLAUDE.md
 $([ "$WITH_HOOKS" = "1" ] && echo "  hooks:   deep-audit-trigger (UserPromptSubmit) + verify-after-edit (PostToolUse)" || echo "  hooks:   (skipped; add with --with-hooks)")
