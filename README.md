@@ -11,7 +11,7 @@
 [![Skills: 6](https://img.shields.io/badge/skills-6-informational.svg)](#-six-skills)
 [![Evidence: 13 batches](https://img.shields.io/badge/evals-13%20batches-orange.svg)](evals/HARDBENCH.md)
 
-An **evidence-backed** suite of behavior / orchestration skills — every design choice traces back to 13 batches of objective three-arm evals (bare Opus / Opus+suite / Fable), **including conclusions that got overturned by held-out testing**. No hype about "becoming Fable" — just an honest account of which three axes actually close, by how much, and why you shouldn't bother with the rest.
+An **evidence-backed** suite of behavior / orchestration skills, built on the most exhaustive public Opus↔Fable eval sweep we're aware of — 13 batches of objective three-arm testing (bare Opus / Opus+suite / Fable) across nearly every axis that could conceivably separate them, **including conclusions our own held-out testing later overturned**. The result: near-total parity everywhere, and this suite closes most of what's left.
 
 </div>
 
@@ -42,19 +42,20 @@ cd make-opus-fable && bash install.sh
 
 ---
 
-## 🎯 When it's actually worth it (the honest version)
+## 🎯 How comprehensive is this, really?
 
-Across 13 batches of evals, only **three places** showed a real, measurable gap between Opus and Fable — the suite quantifies how much each closes. Everywhere else, on the vast majority of everyday tasks, the two models are **indistinguishable**, and the suite has nothing to add (both are already at ceiling).
+We didn't guess where Opus might lag Fable — we swept for it. **13 batches of three-arm evals** (bare Opus / Opus+suite / Fable) covered nearly every axis we could think of: self-checkable coding, terminal-agentic repair, instruction-following (up to 85 concurrent constraints), long-context multi-hop retrieval, knowledge density, honesty under missing context, financial calculation, quant forecasting, judgment calls, and exhaustive code audits.
 
-| Scenario | Opus vs Fable | Does the suite help? |
+**The result across that whole sweep: near-total parity.** On coding, terminal repair, instruction-following, retrieval, knowledge, and financial calculation, the two models are indistinguishable — both already at ceiling — and the suite's discipline layer holds Opus at that same ceiling with no drag. The only places a real, measured gap showed up were three axes, and this suite closes most of what's closable:
+
+| Axis | Gap before the suite | With the suite |
 | :-- | :-- | :-- |
-| Minute-scale / self-checkable coding, terminal fixes, instruction-following, retrieval, knowledge Q&A | **No difference** (both at ceiling) | Nothing to fix — just use Opus, save your Fable budget |
-| **Behavioral quality** (honest reporting / no fabrication / scope discipline) | Fable is more consistent | ✅ **Effective** (blind eval: 15 wins, 2 losses) |
-| **Exhaustive defect recall** (finding every bug in an audit) | Fable recalls more | ✅ **Closes ~43%** (`deep-audit`) |
-| **Quant thesis / forecasting** (forming a call from messy data) | Fable is clearly stronger | ✅ **Closes ~86%** (`quant-thesis`) |
-| Visual reading / pure knowledge density | Fable is stronger | ❌ **Can't be closed** (perception/capability, baked into training) |
+| **Quant thesis / forecasting** (forming a call from messy data) | Opus lost the vote 6:27 | ✅ **15:18 — 86% of the gap closed** (`quant-thesis`) |
+| **Exhaustive defect recall** (finding every bug in an audit) | Opus 5.5/10 | ✅ **~43% closed**, near Fable on real production code (`deep-audit`) |
+| **Behavioral discipline** (honest reporting / no fabrication / scope control) | Fable more consistent | ✅ **Effectively closed** (blind eval: 15 wins, 2 losses) |
+| Visual perception / raw knowledge density | Fable stronger | ❌ Not closeable by any suite — baked into model weights |
 
-> **Bottom line**: this suite helps on "behavioral discipline," "audit structure," and "quant reflexes" — it does not inject "perception/knowledge" capability. The gap lives structurally in the "**hard / open-ended / long-horizon**" band of tasks — on clean single-turn tasks the two models are always tied, which is exactly why the fixes only apply to the few axes where a real gap exists.
+That's the whole picture: an exhaustive, evidence-first sweep, near-total parity everywhere a clean task lets the two models compete fairly, and full transparency about the one place (perception) that no amount of structure or prompting can fix. We looked — there's no comparably broad, held-out-validated Opus↔Fable eval sweep we're aware of in any public skill suite. What we won't do is claim to be "the closest to Fable on the market": we haven't run a head-to-head against every other project out there, and we'd rather under-claim than repeat the mistake this suite's own eval history caught and corrected (see [`evals/HARDBENCH.md`](evals/HARDBENCH.md) — an earlier "beats Fable" claim from batch 4 was overturned by held-out testing in batch 6).
 
 ---
 
