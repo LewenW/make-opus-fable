@@ -2,132 +2,132 @@
 
 # 🜂 make-opus-fable
 
-**把 Fable 5 训练出来的工作习惯,翻译成 Opus 4.8 可执行的显式流程 + 结构。**
+**Translate Fable 5's trained-in work habits into explicit process + structure Opus 4.8 can execute.**
 *Turn Claude Opus 4.8 into a more Fable-like operator — with discipline, audit breadth, and quant reflexes it wasn't trained to reach for.*
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![For Claude Code](https://img.shields.io/badge/for-Claude%20Code-8A2BE2.svg)](https://claude.com/claude-code)
 [![Model: Opus 4.8](https://img.shields.io/badge/model-Opus%204.8-1f6feb.svg)](#)
-[![Skills: 6](https://img.shields.io/badge/skills-6-informational.svg)](#-六个-skill)
+[![Skills: 6](https://img.shields.io/badge/skills-6-informational.svg)](#-six-skills)
 [![Evidence: 13 batches](https://img.shields.io/badge/evals-13%20batches-orange.svg)](evals/HARDBENCH.md)
 
-一套**有实证出处**的行为 / 编排 skill —— 每条设计都来自 13 批三臂客观评测(裸 Opus / Opus+套件 / Fable),**包括被 held-out 打回的错误结论**。不吹「变成 Fable」,只诚实地告诉你:哪三个轴真能拉近、拉多少、其余为什么不用管。
+An **evidence-backed** suite of behavior / orchestration skills — every design choice traces back to 13 batches of objective three-arm evals (bare Opus / Opus+suite / Fable), **including conclusions that got overturned by held-out testing**. No hype about "becoming Fable" — just an honest account of which three axes actually close, by how much, and why you shouldn't bother with the rest.
 
 </div>
 
 ---
 
-## ⚡ 一条命令安装
+## ⚡ One-command install
 
 ```bash
 git clone https://github.com/LewenW/make-opus-fable.git
 cd make-opus-fable && bash install.sh
 ```
 
-装完 **开一个新的 Claude Code 会话** 即生效。马上试:
+**Start a new Claude Code session** for it to take effect. Try it right away:
 
 ```text
-/verify-before-done      交付前自检,把「看着对但其实错」挡下来
-/deep-audit              审整个仓库找 bug(每文件扇出 reviewer + xhigh,买召回)
-/quant-thesis            从凌乱的上游信号预测下游数字,带分解算术与两档信心
+/verify-before-done      pre-flight check before declaring anything done — catches "looks right but isn't"
+/deep-audit              audit a whole repo for bugs (per-file fan-out reviewers + xhigh, buys recall)
+/quant-thesis            forecast a downstream number from messy upstream signals, with shown arithmetic and two-tier conviction
 ```
 
-| 命令 | 作用 |
+| Command | What it does |
 | :-- | :-- |
-| `bash install.sh` | 装 6 个 skill + `verifier` subagent + 行为纪律块 |
-| `bash install.sh --with-hooks` | 额外装确定性触发 hook(让 `deep-audit` 更可靠自动触发) |
-| `bash install.sh --uninstall` | 一键卸载(用标记块管理 `CLAUDE.md`,**绝不动你原有内容**) |
+| `bash install.sh` | Installs 6 skills + the `verifier` subagent + the behavior discipline block |
+| `bash install.sh --with-hooks` | Also installs a deterministic trigger hook (makes `deep-audit` fire more reliably) |
+| `bash install.sh --uninstall` | One-command removal (manages `CLAUDE.md` via a marked block, **never touches your existing content**) |
 
-> 幂等,重装安全。装到用户级 `~/.claude/`;行为纪律以带 `make-opus-fable` 标记的块 **追加** 进 `~/.claude/CLAUDE.md`,卸载时精确移除该块。已实测:安装 → 重装 → 卸载全程你的原有内容分毫不动。
+> Idempotent, safe to re-run. Installs to the user-level `~/.claude/`; the behavior core is **appended** to `~/.claude/CLAUDE.md` inside a block marked `make-opus-fable`, and precisely removed on uninstall. Tested end to end: install → reinstall → uninstall leaves your original content untouched.
 
 ---
 
-## 🎯 什么时候真用得上(诚实版)
+## 🎯 When it's actually worth it (the honest version)
 
-跑了 13 批评测,一手确认能 **真正拉开** Opus 和 Fable 的场景 **只有三处** —— 套件都量化了弥合率;其余绝大多数日常任务两模型 **没差别**,套件也无从帮起(本就满分)。
+Across 13 batches of evals, only **three places** showed a real, measurable gap between Opus and Fable — the suite quantifies how much each closes. Everywhere else, on the vast majority of everyday tasks, the two models are **indistinguishable**, and the suite has nothing to add (both are already at ceiling).
 
-| 场景 | Opus vs Fable | 套件补得动吗 |
+| Scenario | Opus vs Fable | Does the suite help? |
 | :-- | :-- | :-- |
-| 分钟级 / 可自测编码、终端修复、指令遵循、检索、知识问答 | **没差别**(都满分) | 无需补 —— 直接用 Opus,省 Fable 配额 |
-| **行为质量**(诚实汇报 / 不编造 / 范围克制) | Fable 更稳 | ✅ **有效**(盲测 15 胜 2 负) |
-| **穷举缺陷召回**(审计找全每个 bug) | Fable 召回更高 | ✅ **弥合 ~43%**(`deep-audit`) |
-| **quant 论点 / 预测**(凌乱数据下形成判断) | Fable 明显更强 | ✅ **弥合 ~86%**(`quant-thesis`) |
-| 视觉读图 / 纯知识密度 | Fable 更强 | ❌ **补不了**(感知 / 能力,训练进去的) |
+| Minute-scale / self-checkable coding, terminal fixes, instruction-following, retrieval, knowledge Q&A | **No difference** (both at ceiling) | Nothing to fix — just use Opus, save your Fable budget |
+| **Behavioral quality** (honest reporting / no fabrication / scope discipline) | Fable is more consistent | ✅ **Effective** (blind eval: 15 wins, 2 losses) |
+| **Exhaustive defect recall** (finding every bug in an audit) | Fable recalls more | ✅ **Closes ~43%** (`deep-audit`) |
+| **Quant thesis / forecasting** (forming a call from messy data) | Fable is clearly stronger | ✅ **Closes ~86%** (`quant-thesis`) |
+| Visual reading / pure knowledge density | Fable is stronger | ❌ **Can't be closed** (perception/capability, baked into training) |
 
-> **一句话**:套件有用于「行为纪律」「审计结构」「quant 反射」三轴,无用于注入「感知 / 知识」能力。差距结构性地活在「**难 / 开放 / 长视野**」的任务带里 —— 清晰单轮任务上两模型永远打平,所以补起来的地方也只在那几个真会拉开的轴上。
+> **Bottom line**: this suite helps on "behavioral discipline," "audit structure," and "quant reflexes" — it does not inject "perception/knowledge" capability. The gap lives structurally in the "**hard / open-ended / long-horizon**" band of tasks — on clean single-turn tasks the two models are always tied, which is exactly why the fixes only apply to the few axes where a real gap exists.
 
 ---
 
-## 🧩 六个 skill
+## 🧩 Six skills
 
-安装后每个都可用 `/<名字>` 手动触发,也会按 `description` 自动触发(官方已知 skill 会 under-trigger,**重要任务建议手动点名**)。
+Once installed, each can be triggered manually with `/<name>`, or automatically based on its `description` (skills are known to under-trigger — **manual invocation is recommended for anything that matters**).
 
-| Skill | 什么时候用 | 干什么 |
+| Skill | When to use it | What it does |
 | :-- | :-- | :-- |
-| 🔍 **verify-before-done** | 宣称任何实质工作「完成 / 修好 / 通过」之前 | 证据审计 → 对抗五连问 → 只把 findings 放进交付物,过程叙述不放。杀「看着对但其实错」 |
-| 🗂 **deep-audit** | 目标是 **找全** 缺陷:多文件预合并审计、「审这个模块找 bug」、回归 / 安全排查 | 枚举文件 → 每文件一个 fresh `xhigh` reviewer 并行 → 并集去重复核。用 token 和时间换召回 |
-| 📈 **quant-thesis** | 从上游信号预测下游数字:「X 对 Y 意味着什么」「营收会不会加速」「read-through」 | 显式亮分解算术、过手率带系数、给数字区间、两档信心(方向 vs 量级)、查基数 / stock-flow |
-| ⚖️ **judgment** | 交付物是 **决策 / 设计 / 评估** 而非改代码:「该选 X 还是 Y」「这设计合理吗」 | 先评估后动手、先给结论 + 唯一权衡、跑盲点扫描、没达成一致不实现 |
-| 🧭 **long-horizon-protocol** | 跨多文件 / 多步 / 多会话:重构、迁移、整功能、跨模块调试、长研究 | 需求合并 → 计划门 → 切成 ≤1h 单元 → 状态检查点,别丢线头 |
-| 🧠 **memory-discipline** | 读写跨会话记忆:`CLAUDE.md`、进度笔记、经验账本 | 写什么 / 怎么写 / 召回前先验一手,别把假设当事实带进未来会话 |
+| 🔍 **verify-before-done** | Before declaring any substantive work "done / fixed / passing" | Evidence audit → adversarial five-point pass → only findings go into the deliverable, never the process narration. Kills "looks right but isn't" |
+| 🗂 **deep-audit** | The goal is to find **every** defect: pre-merge multi-file audits, "review this module for bugs", regression / security passes | Enumerate files → one fresh `xhigh` reviewer per file, in parallel → union, then de-dupe and re-verify. Trades tokens and wall-clock for coverage |
+| 📈 **quant-thesis** | Forecasting a downstream number from upstream signals: "what does X imply for Y", "will revenue accelerate", "read-through" | Shows the decomposition arithmetic explicitly, sizes pass-through with coefficients, gives a numbered band, splits conviction into direction vs. magnitude, checks base effects / stock-vs-flow |
+| ⚖️ **judgment** | The deliverable is a **decision / design / assessment**, not an edit: "should we do X or Y", "is this design sound" | Assess before editing, lead with the call plus its one real tradeoff, run a blindspot pass, don't implement until agreed |
+| 🧭 **long-horizon-protocol** | Spans multiple files / steps / sessions: refactors, migrations, whole features, cross-module debugging, long research | Consolidate requirements → plan-gate → slice into ≤1h units → checkpoint state, don't lose the thread |
+| 🧠 **memory-discipline** | Reading or writing cross-session memory: `CLAUDE.md`, progress notes, lesson ledgers | What to write / how to write it / verify before recalling — never carry an assumption into a future session as if it were fact |
 
-> 外加 `agents/verifier.md` —— fresh-context 对抗验证 subagent,大改高危时 `@verifier` 点名保证执行(比自检强)。
-
----
-
-## 🔬 它为什么有效(机制,一句话版)
-
-差距不是 Opus「不会」,而是「**没养成反射**」。
-
-- **审计**:Opus 会找 bug,但不会主动 **穷举每个文件**。→ `deep-audit` 用扇出编排把「广度」变成 N 个窗口内单元,召回从 5.5/10 抬到接近 Fable。
-- **quant**:Opus 会算 `1.14 / 1.08`,但不会主动 **亮出分解算术**。→ `quant-thesis` 把 Fable 的技术反射固化成规程,票级弥合 86%。
-- **能力轴**(视觉 / 知识):这些是训练进权重的,**任何 prompt 都补不了** —— 套件诚实地不假装能补。
-
-所以有效的杠杆是 **配置(effort)+ 结构(扇出编排)+ 针对性反射协议**,而不是「写更聪明的提示词」。纯文字 skill 在能力轴反复被 held-out 验证补 **0%**。
+> Plus `agents/verifier.md` — a fresh-context adversarial verification subagent. Invoke `@verifier` by name on high-stakes changes to guarantee the check actually runs (stronger than self-review).
 
 ---
 
-## 📊 证据
+## 🔬 Why it works (the mechanism, in one line)
 
-全部结论(含被 held-out 打回的错误结论)在 **[`evals/HARDBENCH.md`](evals/HARDBENCH.md)** —— 13 批三臂客观评测,隐藏测试 / 磁盘 / Python / 盲配对面板打分。要点:
+The gap isn't that Opus "can't" — it's that it **hasn't built the reflex**.
 
-- **可自测编码 6 任务** → 三臂全 100%,0 差距(清晰单轮任务两模型不分)。
-- **缺陷召回** → 裸 Opus 5.5/10;xhigh+扇出补到接近 Fable;真实代码同协议头对头 **Opus 7/9 vs Fable 9/9**(拉近不平)。
-- **quant 论点**(n=11 盲配对面板)→ 裸 Opus 票级输 Fable **6:27** → `quant-thesis` 补到 **15:18** 近平手(弥合 **86%**)。
-- **四能力轴补测**(终端 agentic / 超量指令遵循 @85 约束 / 长上下文多跳 / 知识密度)→ 四轴全部三臂 **零分离**,全天花板。
-- **真实世界** → 对一个生产仓库全量扇出审计,一次挖出 **1 critical + 8 high 全为真**([`evals/AUDIT-PARALLAX.md`](evals/AUDIT-PARALLAX.md))。
+- **Auditing**: Opus can find bugs, but doesn't reach for **exhaustively enumerating every file** on its own. → `deep-audit` uses fan-out orchestration to turn "breadth" into N in-window units — recall climbs from 5.5/10 on bare Opus to near Fable.
+- **Quant**: Opus can compute `1.14 / 1.08`, but doesn't reach for **showing the decomposition** on its own. → `quant-thesis` codifies Fable's technique reflexes into a protocol, closing 86% of the vote-level gap.
+- **Capability axes** (vision / knowledge): these are baked into the weights, and **no prompt can add them** — the suite is honest that it can't help here.
 
----
-
-## 🛠 使用要点
-
-- **自动触发不完全可靠**(官方已知)。重要任务直接手动:`/long-horizon-protocol`、交付前 `/verify-before-done`、点名 `@verifier` 复核。
-- **短小任务别上流程** —— 每个 skill 都留了 trivial 逃生口;税感明显时说明触发范围该收窄。
-- **token 档位**(实测量级):generation / judgment / 日常 ≈ **1×**;long-horizon ≈ 1.2–1.5×;`deep-audit` 扇出 ≈ **4–5×**(唯一大头,只在主动要审计级召回时才付)。
-- **quant / 审计要发挥,配 `effort=xhigh`**(`deep-audit` 的 frontmatter 已内置)。
+So the levers that actually work are **configuration (effort) + structure (fan-out orchestration) + targeted reflex protocols** — not "writing a smarter prompt." Plain-text skills, tested against held-out cases, repeatedly close **0%** of the capability-axis gap.
 
 ---
 
-## 📁 目录
+## 📊 Evidence
+
+Every conclusion (including the ones held-out testing overturned) lives in **[`evals/HARDBENCH.md`](evals/HARDBENCH.md)** — 13 batches of objective three-arm evals, graded by hidden tests, on-disk state, Python, or blind pairwise panels. Highlights:
+
+- **6 self-checkable coding tasks** → all three arms hit 100%, zero gap (clean single-turn tasks never separate the two models).
+- **Defect recall** → bare Opus 5.5/10; xhigh + fan-out closes most of the gap; on real production code under the same protocol, head-to-head: **Opus 7/9 vs. Fable 9/9** (closer, not closed).
+- **Quant thesis** (n=11, blind pairwise panel) → bare Opus loses to Fable **6:27** on votes → `quant-thesis` closes it to **15:18**, nearly even (**86% closed**).
+- **Four capability-axis follow-ups** (terminal agentic / instruction-following at 85 concurrent constraints / long-context multi-hop / knowledge density) → all four axes show **zero separation** across all three arms — every one at ceiling.
+- **Real-world validation** → a full fan-out audit of a production repo surfaced **1 critical + 8 high-severity bugs, all confirmed real** ([`evals/AUDIT-PARALLAX.md`](evals/AUDIT-PARALLAX.md)).
+
+---
+
+## 🛠 Usage notes
+
+- **Auto-triggering isn't fully reliable** (a known Anthropic limitation). For anything that matters, invoke manually: `/long-horizon-protocol`, `/verify-before-done` before declaring done, `@verifier` for review.
+- **Don't apply process to small tasks** — every skill has a trivial-task escape hatch; if the overhead feels noticeable, that's a sign the trigger scope should be narrowed.
+- **Token cost tiers** (measured): generation / judgment / everyday work ≈ **1×**; long-horizon ≈ 1.2–1.5×; `deep-audit` fan-out ≈ **4–5×** (the one real cost center — only pay it when you actually want audit-grade recall).
+- **For quant / audit work, pair with `effort=xhigh`** (already built into `deep-audit`'s frontmatter).
+
+---
+
+## 📁 Layout
 
 ```text
 skills/
-  verify-before-done/     完成前验证:证据审计→对抗五连问→findings进交付物、过程不进
-  deep-audit/             扇出审计:effort xhigh(frontmatter)+每文件 reviewer+去重复核
-  quant-thesis/           quant 反射:分解亮算术 / 过手率带系数 / 数字区间 / 两档信心
-  judgment/               决策/设计:先评估后动手、先给结论+唯一权衡、盲点扫描
-  long-horizon-protocol/  长任务:需求合并→计划门→切片→检查点
-  memory-discipline/      记忆纪律:写什么/怎么写/召回前验一手
-agents/verifier.md        fresh-context 对抗验证 subagent(@verifier 点名=保证执行)
+  verify-before-done/     pre-done check: evidence audit → adversarial pass → findings in, process out
+  deep-audit/             fan-out audit: effort xhigh (frontmatter) + per-file reviewer + de-dupe re-verify
+  quant-thesis/           quant reflexes: show decomposition arithmetic / sized pass-through / numbered bands / two-tier conviction
+  judgment/               decisions/design: assess before editing, lead with the call + one tradeoff, blindspot pass
+  long-horizon-protocol/  long tasks: consolidate requirements → plan-gate → slice → checkpoint
+  memory-discipline/      memory hygiene: what/how to write, verify before recalling
+agents/verifier.md        fresh-context adversarial verification subagent (@verifier = guaranteed execution)
 config/
-  CLAUDE-core.md          常驻行为核 + 任务路由器(装进 ~/.claude/CLAUDE.md;含 5 种 mode)
-  settings-snippets.md    配置杠杆:thinking / effort / hooks / API 参数
-hooks/                    确定性兜底:多文件审计意图必触发扇出(deep-audit-trigger.py)
+  CLAUDE-core.md          persistent behavior core + task router (install into ~/.claude/CLAUDE.md; 5 modes)
+  settings-snippets.md    config levers: thinking / effort / hooks / API parameters
+hooks/                    deterministic backstop: multi-file audit intent always triggers fan-out (deep-audit-trigger.py)
 evals/
-  HARDBENCH.md            13 批三臂客观评测(核心证据;含被证伪结论)
-  RESULTS.md              三轮盲测完整战绩与迭代史(15-2-0;含全部败绩、诊断、教训)
-  AUDIT-PARALLAX.md       对生产仓库全量扇出审计报告(1 critical + 8 high 全为真)
-install.sh                一条命令安装 / 卸载(幂等、可回滚)
+  HARDBENCH.md            13 batches of objective three-arm evals (core evidence; includes overturned conclusions)
+  RESULTS.md              full blind-eval track record and iteration history (15-2-0; includes every loss, diagnosis, lesson)
+  AUDIT-PARALLAX.md        full fan-out audit report on a production repo (1 critical + 8 high, all confirmed real)
+install.sh                one-command install / uninstall (idempotent, reversible)
 ```
 
 ---
@@ -135,35 +135,35 @@ install.sh                一条命令安装 / 卸载(幂等、可回滚)
 ## ❓ FAQ
 
 <details>
-<summary><b>会拖累简单任务吗?</b></summary>
+<summary><b>Will it slow down simple tasks?</b></summary>
 
-不会。每个 skill 有 trivial 逃生口,generation / judgment / 日常开销 ≈ 1×。实测:分钟级可自测任务上套件对正确率零增益也零拖累。
+No. Every skill has a trivial-task escape hatch; generation / judgment / everyday overhead ≈ 1×. Measured: on minute-scale, self-checkable tasks, the suite adds zero accuracy gain and zero drag.
 </details>
 
 <details>
-<summary><b>会动我现有的 CLAUDE.md 吗?</b></summary>
+<summary><b>Will it touch my existing CLAUDE.md?</b></summary>
 
-不会。行为纪律以带 `make-opus-fable` 标记的块 **追加**,`--uninstall` 精确移除该块,你原有内容分毫不动。已实测验证。
+No. The behavior core is **appended** inside a block marked `make-opus-fable`; `--uninstall` removes exactly that block, leaving your original content untouched. Verified by testing.
 </details>
 
 <details>
-<summary><b>装在哪?能只对一个项目生效吗?</b></summary>
+<summary><b>Where does it install? Can it be project-scoped?</b></summary>
 
-默认装用户级 `~/.claude/`(全局)。想只对某个项目生效,把 `skills/*` 拷进该项目的 `.claude/skills/` 即可。
+By default it installs to the user-level `~/.claude/` (global). To scope it to one project, copy `skills/*` into that project's `.claude/skills/` instead.
 </details>
 
 <details>
-<summary><b>这能让 Opus 变成 Fable 吗?</b></summary>
+<summary><b>Does this turn Opus into Fable?</b></summary>
 
-不能,诚实讲。它让 Opus 在三个真会拉开的轴上「够用地逼近」Fable(quant 86% / 召回 43% / 行为纪律有效),但拉不平 —— 感知和纯知识是训练进去的,任何 prompt 都补不了。这套件最值钱的地方,其实是它背后那套 **不自欺的评测纪律**(held-out + 隔离变量 + 客观 oracle + 抽验)。
+No — honestly. It gets Opus "close enough" to Fable on the three axes where a real gap exists (quant 86% / recall 43% / behavioral discipline effective), but it doesn't fully close the gap — perception and raw knowledge are baked into training, and no prompt fixes that. Arguably the most valuable part of this project isn't the skills themselves, but the **rigorous, self-skeptical eval discipline** behind them (held-out validation, isolated variables, objective oracles, spot-checking).
 </details>
 
 ---
 
 <div align="center">
 
-**卸载** · `bash install.sh --uninstall`
+**Uninstall** · `bash install.sh --uninstall`
 
-Built with honest evals. MIT licensed. · 用诚实的评测搭出来的。
+Built with honest evals. MIT licensed.
 
 </div>
