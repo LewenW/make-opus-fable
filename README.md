@@ -3,12 +3,12 @@
 # 🜂 make-opus-fable
 
 **Translate Fable 5's trained-in work habits into explicit process + structure Opus 4.8 can execute.**
-*Turn Claude Opus 4.8 into a more Fable-like operator — with discipline, audit breadth, and quant reflexes it wasn't trained to reach for.*
+*Turn Claude Opus 4.8 into a more Fable-like operator — a comprehensive discipline layer across the whole working loop: verify, audit, debug, write native, plan, ground, judge.*
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![For Claude Code](https://img.shields.io/badge/for-Claude%20Code-8A2BE2.svg)](https://claude.com/claude-code)
 [![Model: Opus 4.8](https://img.shields.io/badge/model-Opus%204.8-1f6feb.svg)](#)
-[![Skills: 7](https://img.shields.io/badge/skills-7-informational.svg)](#-seven-skills)
+[![Skills: 9](https://img.shields.io/badge/skills-9-informational.svg)](#-nine-skills)
 [![Evidence: 13 batches](https://img.shields.io/badge/evals-13%20batches-orange.svg)](evals/HARDBENCH.md)
 
 An **evidence-backed** suite of behavior / orchestration skills, built on the most exhaustive public Opus↔Fable eval sweep we're aware of — 13 batches of objective three-arm testing (bare Opus / Opus+suite / Fable) across nearly every axis that could conceivably separate them, **including conclusions our own held-out testing later overturned**. The result: near-total parity everywhere, and this suite closes most of what's left.
@@ -34,7 +34,7 @@ cd make-opus-fable && bash install.sh
 
 | Command | What it does |
 | :-- | :-- |
-| `bash install.sh` | Installs 7 skills + the `verifier` subagent + the behavior discipline block |
+| `bash install.sh` | Installs 9 skills + the `verifier` subagent + the behavior discipline block |
 | `bash install.sh --with-hooks` | Also installs two deterministic hooks: `verify-after-edit` (runs your project's tests after every code edit) and `deep-audit-trigger` (makes the audit fan-out fire reliably) |
 | `bash install.sh --uninstall` | One-command removal (manages `CLAUDE.md` via a marked block, **never touches your existing content**) |
 
@@ -47,15 +47,19 @@ cd make-opus-fable && bash install.sh
 /plugin install make-opus-fable@make-opus-fable
 ```
 
-The plugin path delivers the **7 skills + the `verifier` agent** (namespaced, e.g. `/make-opus-fable:deep-audit`) with zero cloning. Because plugins can't modify your `CLAUDE.md` or auto-load these hooks, the **always-on behavior core and the two deterministic hooks still come from `install.sh`** — run it if you want the full suite. Use whichever entry point fits; they don't conflict. (Marketplace manifest passes `claude plugin validate`.)
+The plugin path delivers the **9 skills + the `verifier` agent** (namespaced, e.g. `/make-opus-fable:deep-audit`) with zero cloning. Because plugins can't modify your `CLAUDE.md` or auto-load these hooks, the **always-on behavior core and the two deterministic hooks still come from `install.sh`** — run it if you want the full suite. Use whichever entry point fits; they don't conflict. (Marketplace manifest passes `claude plugin validate`.)
 
 ---
 
-## 🎯 How comprehensive is this, really?
+## 🎯 What it covers, and how we know it works
 
-We didn't guess where Opus might lag Fable — we swept for it. **13 batches of three-arm evals** (bare Opus / Opus+suite / Fable) covered nearly every axis we could think of: self-checkable coding, terminal-agentic repair, instruction-following (up to 85 concurrent constraints), long-context multi-hop retrieval, knowledge density, honesty under missing context, financial calculation, quant forecasting, judgment calls, and exhaustive code audits.
+This is a **comprehensive engineering-discipline suite**, not a niche add-on. Nine skills + two hooks cover the whole working loop — verify before done, audit for defects, debug to root cause, write code native to the file, keep scope tight, plan long work, ground visual output, form quantitative theses, make design calls, and carry memory across sessions. The goal is a general operator that behaves like a careful senior engineer across everything, not a specialist in one domain.
 
-**The result across that whole sweep: near-total parity.** On coding, terminal repair, instruction-following, retrieval, knowledge, and financial calculation, the two models are indistinguishable — both already at ceiling — and the suite's discipline layer holds Opus at that same ceiling with no drag. The only places a real, measured gap showed up were three axes, and this suite closes most of what's closable:
+The quant/finance angle is **not** the product's identity — it was one of the *probes* we used to measure where Opus actually lags Fable. Which brings us to the evidence:
+
+We didn't guess where the gaps were — we swept for them. **13 batches of three-arm evals** (bare Opus / Opus+suite / Fable) covered nearly every axis that could separate the two: self-checkable coding, terminal-agentic repair, instruction-following (up to 85 concurrent constraints), long-context multi-hop retrieval, knowledge density, honesty under missing context, financial calculation, quant forecasting, judgment calls, and exhaustive code audits.
+
+**The result across that whole sweep: near-total parity.** On coding, terminal repair, instruction-following, retrieval, knowledge, and financial calculation, the two models are indistinguishable — both at ceiling — and the suite's discipline layer holds Opus there with no drag. Real, measured gaps showed up on three axes, and the suite closes most of what's closable:
 
 | Axis | Gap before the suite | With the suite |
 | :-- | :-- | :-- |
@@ -68,7 +72,7 @@ That's the whole picture: an exhaustive, evidence-first sweep, near-total parity
 
 ---
 
-## 🧩 Seven skills
+## 🧩 Nine skills
 
 Once installed, each can be triggered manually with `/<name>`, or automatically based on its `description` (skills are known to under-trigger — **manual invocation is recommended for anything that matters**).
 
@@ -81,6 +85,8 @@ Once installed, each can be triggered manually with `/<name>`, or automatically 
 | 🧭 **long-horizon-protocol** | Spans multiple files / steps / sessions: refactors, migrations, whole features, cross-module debugging, long research | Consolidate requirements → plan-gate → slice into ≤1h units → evidence ledger + completion gate → checkpoint state |
 | 🧠 **memory-discipline** | Reading or writing cross-session memory: `CLAUDE.md`, progress notes, lesson ledgers | What to write / how to write it / verify before recalling — never carry an assumption into a future session as if it were fact |
 | 🖼 **visual-grounding** | The deliverable is **visual**: rendered HTML/CSS, SVG, charts, UI, animations, any layout/styling change | Render it and look at the actual output (screenshot / DOM / computed styles) before claiming it works — a passing build verifies code, not pixels |
+| 🐛 **debugging** | Locating the cause of **one** specific failure: "why is X failing", a failing test, a crash, a wrong output | Reproduce deterministically → hypothesis with a falsifier → binary-search / `git bisect` to isolate → confirm the causal chain → minimal fix → re-run the repro. Never guess-and-retry |
+| 🧵 **native-code** | Writing or editing code **inside an existing file** | Match the file's idiom; no defensive bloat, no narrating comments, no speculative generality — the change should read as if the original author wrote it |
 
 > Plus `agents/verifier.md` — a fresh-context adversarial verification subagent. Invoke `@verifier` by name on high-stakes changes to guarantee the check actually runs (stronger than self-review). And two deterministic **hooks** (`--with-hooks`): `verify-after-edit` runs your project's tests after every code edit (debounced, with a timeout and env-var kill switch), `deep-audit-trigger` guarantees the audit fan-out fires — a skill is a request, a hook is a guarantee.
 
@@ -132,6 +138,8 @@ skills/
   long-horizon-protocol/  long tasks: consolidate → plan-gate → slice → evidence ledger + completion gate → checkpoint
   memory-discipline/      memory hygiene: what/how to write, verify before recalling
   visual-grounding/       visual work: render and look at the actual output before claiming it works
+  debugging/              root-cause: reproduce → isolate → causal chain → minimal fix → re-run repro
+  native-code/            match the file's idiom; no defensive bloat, narration, or speculative generality
 agents/verifier.md        fresh-context adversarial verification subagent (@verifier = guaranteed execution)
 config/
   CLAUDE-core.md          persistent behavior core + task router (install into ~/.claude/CLAUDE.md; 5 modes)
@@ -173,6 +181,29 @@ By default it installs to the user-level `~/.claude/` (global). To scope it to o
 
 No — honestly. It gets Opus "close enough" to Fable on the three axes where a real gap exists (quant 86% / recall 43% / behavioral discipline effective), but it doesn't fully close the gap — perception and raw knowledge are baked into training, and no prompt fixes that. Arguably the most valuable part of this project isn't the skills themselves, but the **rigorous, self-skeptical eval discipline** behind them (held-out validation, isolated variables, objective oracles, spot-checking).
 </details>
+
+---
+
+## 🙏 Prior art & acknowledgments
+
+This suite aims to be comprehensive, and part of getting there was studying the other open Fable-behavior
+projects and folding in the general engineering disciplines they got right (ideas, not code — each is
+independently authored here). Credit where due, all MIT-licensed:
+
+- **[fivetaku/fablize](https://github.com/fivetaku/fablize)** — the most rigorous of the bunch; its
+  verification-grounding and root-cause investigation framing informed `debugging` and `visual-grounding`.
+- **[DizzyMii/fable-skills](https://github.com/DizzyMii/fable-skills)** — the "write native to the file"
+  discipline behind `native-code`, and the rationalization-and-rebuttal format.
+- **[benjaminard/fable-skills](https://github.com/benjaminard/fable-skills)** — root-cause-first and
+  minimal-diff, which reinforced `debugging` and the scope discipline in the core.
+- **[alicicek/tale-mode](https://github.com/alicicek/tale-mode)** — deterministic gate hooks; a reminder
+  that a hook is a guarantee where a skill is only a request.
+
+Where these projects converge — verify before done, fan-out review, finish the turn, outcome-first — we
+converge too; the shared conclusion is the point. What's distinct here is the **evidence chain**: 13
+batches of objective three-arm evals (including conclusions our own held-out testing overturned), rather
+than assertion. We deliberately do **not** ship the more intrusive hooks some of these use (turn-end
+blocking, test-vs-live-data guards) — that's a design choice toward advisory-by-default, not an oversight.
 
 ---
 

@@ -1,6 +1,8 @@
 {
   "name": "make-opus-fable",
-  "owner": { "name": "Lewen Wang" },
+  "owner": {
+    "name": "Lewen Wang"
+  },
   "metadata": {
     "description": "Behavior + orchestration skills that make Opus 4.8 more Fable-like, backed by an exhaustive three-arm eval sweep."
   },
@@ -8,9 +10,15 @@
     {
       "name": "make-opus-fable",
       "source": "./",
-      "description": "7 skills (verify-before-done, deep-audit, quant-thesis, judgment, long-horizon-protocol, memory-discipline, visual-grounding) + the verifier agent. Note: the always-on behavior core and the deterministic hooks are delivered by install.sh, not the plugin (plugins cannot modify CLAUDE.md or auto-load these hooks).",
+      "description": "9 skills (verify-before-done, deep-audit, quant-thesis, judgment, long-horizon-protocol, memory-discipline, visual-grounding, debugging, native-code) + the verifier agent. Note: the always-on behavior core and the deterministic hooks are delivered by install.sh, not the plugin (plugins cannot modify CLAUDE.md or auto-load these hooks).",
       "license": "MIT",
-      "keywords": ["fable", "opus", "audit", "quant", "verification"]
+      "keywords": [
+        "fable",
+        "opus",
+        "audit",
+        "quant",
+        "verification"
+      ]
     }
   ]
 }
